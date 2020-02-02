@@ -28,7 +28,7 @@ class Goods extends Base
         //查询商品信息、商品相册、规格商品SKU
         $goods = \app\common\model\Goods::with('goods_images,spec_goods')->find($id);
         //将商品的第一个规格商品的信息，替换到$goods中
-        if (empty($goods['spec_goods'])) {
+        if (!empty($goods['spec_goods'])) {
             if ($goods['spec_goods'][0]['price'] > 0) {
                 $goods['goods_price'] = $goods['spec_goods'][0]['price'];
             }

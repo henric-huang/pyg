@@ -28,6 +28,21 @@ class Cart extends Base
             $this->error($validate);
         }
         //处理数据 调用封装好的方法
-        \app\home\logic\CartLoginc::addCart($params['goods_id'], $params['spec_goods_id'], $params['number']);
+        \app\home\logic\CartLogic::addCart($params['goods_id'], $params['spec_goods_id'], $params['number']);
+        //结果页面展示
+        //查询商品相关信息以及SKU信息
+        $goods = \app\common\model\Goods::getGoodsWithSpec($params['spec_goods_id'], $params['goods_id']);
+        //dump($goods);die;
+        return view('addcart', ['goods' => $goods, 'number' => $params['number']]);
+    }
+
+    //用于测试加入购物车功能 cookie的情况
+    public function test()
+    {
+        //获取cookie中所有的购物车数据，判断添加操作是否成功
+        $data = cookie('cart');
+        dump($data);die;
+        //如果cookie中的购物车数据有问题，则全部删除，再重新添加
+        cookie('cart', null);
     }
 }
