@@ -2,6 +2,7 @@
 
 namespace app\home\controller;
 
+use app\home\logic\CartLogic;
 use think\Controller;
 use think\Request;
 
@@ -36,12 +37,28 @@ class Cart extends Base
         return view('addcart', ['goods' => $goods, 'number' => $params['number']]);
     }
 
+    //购物车列表
+    public function index()
+    {
+        //查询所有购物车数据
+        $list = CartLogic::getAllCart();
+        //对每一条购物记录 查询商品相关信息（商品信息和SKU信息）
+//        dump($list);die();
+        foreach ($list as &$v) {
+            $v['goods'] = \app\common\model\Goods::getGoodsWithSpec($v['spec_goods_id'], $v['goods_id'])->toArray();
+        }
+        unset($v);
+//        dump($list);die();
+        return view('index', ['list' => $list]);
+    }
+
     //用于测试加入购物车功能 cookie的情况
     public function test()
     {
         //获取cookie中所有的购物车数据，判断添加操作是否成功
         $data = cookie('cart');
-        dump($data);die;
+        dump($data);
+        die;
         //如果cookie中的购物车数据有问题，则全部删除，再重新添加
         cookie('cart', null);
     }

@@ -5,6 +5,7 @@
  * Date: 2018/3/12
  * Time: 16:08
  */
+
 namespace app\admin\controller;
 
 use app\admin\model\Auth;
@@ -19,14 +20,14 @@ class Base extends Controller
         parent::__construct();
 
         //测试，免登陆
-        if ( !session('manager_info') ) {
+        /*if ( !session('manager_info') ) {
             $info = \app\admin\model\Admin::find(1)->toArray();
             session('manager_info', $info);
-        }
+        }*/
 
 
         //登录验证
-        if ( !session('manager_info') ) {
+        if (!session('manager_info')) {
             //没有登录 跳转到登录页面
             $this->redirect('admin/login/login');
         }
@@ -36,7 +37,7 @@ class Base extends Controller
         $this->getnav();
 
         $action = request()->action();
-        if(in_array($action,['index', 'read'])){
+        if (in_array($action, ['index', 'read'])) {
             $this->view->engine->layout(true);
         }
 
@@ -54,23 +55,26 @@ class Base extends Controller
             $nav = Auth::where('is_nav', 1)->select();
         } else {
             //如果是普通管理员，先查询角色表 取到role_auth_ids
-            $role = Role::find($role_id);
+            $role          = Role::find($role_id);
             $role_auth_ids = $role->role_auth_ids;
             //查询拥有的菜单权限
             $nav = Auth::where([
                 'is_nav' => 1,
-                'id' => ['in', $role_auth_ids]
+                'id'     => ['in', $role_auth_ids]
             ])->select();
         }
+//        dump($nav);die();
         $nav = (new \think\Collection($nav))->toArray();
+//        dump($nav);die();
         $nav = get_tree_list($nav);
+//        dump($nav);die();
         //变量赋值
         $this->assign('nav', $nav);
 
-        $controller = request()->controller();
-        $action = request()->action();
-        $auth = Auth::where(['auth_c'=>$controller, 'auth_a'=>$action])->find();
-        $current_auth_ids = explode('_', $auth['pid_path']);
+        $controller         = request()->controller();
+        $action             = request()->action();
+        $auth               = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
+        $current_auth_ids   = explode('_', $auth['pid_path']);
         $current_auth_ids[] = $auth['id'];
         $this->assign('current_auth_ids', $current_auth_ids);
     }
@@ -82,13 +86,13 @@ class Base extends Controller
         $role_id = session('manager_info.role_id');
         if ($role_id == 1) {
             //超级管理员，拥有所有权限，不需要继续检测
-            return ;
+            return;
         }
         //普通管理员 需要检测权限
         //分别获取当前请求的控制器和方法名称
         $controller = request()->controller();
-        $action = request()->action();
-        if (strtolower($controller) == 'index' && strtolower($action) == 'index'){
+        $action     = request()->action();
+        if (strtolower($controller) == 'index' && strtolower($action) == 'index') {
 //            if ($controller == 'Index' && $action == 'index'){
             //特殊页面 比如后台首页，不需要检测权限
             return;
@@ -96,8 +100,8 @@ class Base extends Controller
         $ac = $controller . '-' . $action;
         //判断$ac 是否在已经拥有的权限role_auth_ac里面
         //查询当前角色信息
-        $role = Role::find($role_id);
-        $auth = Auth::where(['auth_c'=>$controller, 'auth_a'=>$action])->find();
+        $role          = Role::find($role_id);
+        $auth          = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
         $role_auth_ids = explode(',', $role->role_auth_ids);
         if (!in_array($auth['id'], $role_auth_ids)) {
             $this->error('没有权限访问', 'admin/index/index');
@@ -105,22 +109,24 @@ class Base extends Controller
 
     }
 
-    public function response($code=200, $msg='success', $data=[])
+    public function response($code = 200, $msg = 'success', $data = [])
     {
         $res = [
             'code' => $code,
-            'msg' => $msg,
+            'msg'  => $msg,
             'data' => $data
         ];
 //        echo json_encode($res, JSON_UNESCAPED_UNICODE);die;
-        json($res)->send();die;
+        json($res)->send();
+        die;
     }
 
-    public function fail($msg='fail',$code=500)
+    public function fail($msg = 'fail', $code = 500)
     {
         return $this->response($code, $msg);
     }
-    public function ok($data=[], $code=200, $msg='success')
+
+    public function ok($data = [], $code = 200, $msg = 'success')
     {
         return $this->response($code, $msg, $data);
     }

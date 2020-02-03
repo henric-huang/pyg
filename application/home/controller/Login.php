@@ -3,6 +3,7 @@
 namespace app\home\controller;
 
 use app\common\model\User;
+use app\home\logic\CartLogic;
 use think\Controller;
 
 class Login extends Controller
@@ -144,22 +145,26 @@ class Login extends Controller
         if ($info) {
             //设置登录标识
             session('user_info', $info->toArray());
+            //迁移cookie购物车数据到数据表
+            CartLogic::cookieToDb();
             //页面跳转
             $this->redirect('home/index/index');
         } else {
             $this->error('用户名或密码错误');
         }
 
-        //写法二  先根据用户名查询，再比对密码
+        /*//写法二  先根据用户名查询，再比对密码
         $info = \app\common\model\User::where('phone', $params['username'])->whereOr('email', $params['username'])->find();
         if ($info && $info['password'] == $password) {
             //设置登录标识
             session('user_info', $info->toArray());
+            //迁移cookie购物车数据到数据表
+            CartLogic::cookieToDb();
             //页面跳转
             $this->redirect('home/index/index');
         } else {
             $this->error('用户名或密码错误');
-        }
+        }*/
     }
 
     /**
@@ -200,6 +205,8 @@ class Login extends Controller
         //设置登录标识
         $user = \app\common\model\User::where('open_type', 'qq')->where('openid', $openid)->find();
         session('user_info', $user->toArray());
+        //迁移cookie购物车数据到数据表
+        CartLogic::cookieToDb();
         //页面跳转
         $this->redirect('home/index/index');
     }
