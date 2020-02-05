@@ -104,4 +104,53 @@ class CartLogic
         //删除cookie购物车数据
         cookie('cart', null);
     }
+
+    /**
+     * 修改购买数量
+     * @param $id 修改条件：已登录 主键id；未登录 20_30下标
+     * @param $number 修改数量
+     */
+    public static function changeNum($id, $number)
+    {
+        //判断登录状态  已登录修改数据表；未登录修改cookie
+        if (session('?user_info')) {
+            //已登录修改数据表
+            $user_id = session('user_info.id');
+            //只能修改当前用户自己的记录
+            //Cart::where(['id' => $id, 'user_id' => $user_id])->update(['number' => $number]);
+            Cart::update(['number' => $number], ['id' => $id, 'user_id' => $user_id]);
+        } else {
+            //未登录修改cookie
+            //先从cookie取出所有记录
+            $data = cookie('cart') ?: [];
+//            dump($data);die;
+            //修改数量
+            $data[$id]['number'] = $number;
+            //重新保存到cookie
+            cookie('cart', $data, 24 * 3600 * 7);
+        }
+    }
+
+    /**
+     * 删除购物记录
+     * @param $id 删除条件 主键id或者下标20_30
+     */
+    public static function delCart($id)
+    {
+        //判断登录状态  已登录 删除数据表，未登录删除cookie
+        if (session('?user_info')) {
+            //已登录 删除数据表
+            $user_id = session('user_info.id');
+//            Cart::destroy(['id' => $id, 'user_id' => $user_id]);
+            Cart::where(['id' => $id, 'user_id' => $user_id])->delete();
+        } else {
+            //未登录删除cookie
+            //从cookie中取出所有
+            $data = cookie('cart') ?: [];
+            //$id 就是一个下标
+            unset($data[$id]);
+            //重新保存到cookie
+            cookie('cart', $data, 7 * 3600 * 24);
+        }
+    }
 }

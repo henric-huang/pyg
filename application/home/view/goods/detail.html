@@ -704,7 +704,25 @@
             $('#goods_price').html(spec_goods_price);
         });
 
-
+        //加号
+        $('#plus').click(function () {
+            //获取数量
+            var number = parseInt($('#number').val());
+            //计算新的数量
+            number += 1;
+            //展示新的数量
+            $('#number').val(number);
+        });
+        //减号
+        $('#mins').click(function () {
+            //获取数量
+            var number = parseInt($('#number').val());
+            //计算新的数量
+            if (number == 1) return;
+            number -= 1;
+            //展示新的数量
+            $('#number').val(number);
+        });
     })
 </script>
 

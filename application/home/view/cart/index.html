@@ -26,7 +26,7 @@
                 <div class="cart-body">
                     {foreach $list as $v}
                     <div class="cart-list">
-                        <ul class="goods-list yui3-g">
+                        <ul class="goods-list yui3-g" cart_id="{$v.id}" number="{$v.number}">
                             <li class="yui3-u-1-24">
                                 <input type="checkbox" class="row_check" name="" id="" value=""
                                        {if ($v.is_selected)}checked="checked" {/if}/>
@@ -49,7 +49,7 @@
                             </li>
                             <li class="yui3-u-1-8"><span class="sum">{$v.goods.goods_price * $v.number}</span></li>
                             <li class="yui3-u-1-8">
-                                <a href="#none" class="delete">删除</a><br/>
+                                <a href="javascript:;" class="delete">删除</a><br/>
                                 <a href="#none">移到我的关注</a>
                             </li>
                         </ul>
@@ -240,6 +240,45 @@
 </div>
 <script>
     $(function () {
+        /**
+         * 修改购买数量
+         * @param number 修改数量
+         * @param element 触发事件的标签
+         */
+        var change_num = function (number, element) {
+            //需要的参数  id  number
+            var data = {
+                "id": $(element).closest('ul').attr('cart_id'),
+                "number": number,
+            };
+            //发送ajax请求
+            $.ajax({
+                "url": "{:url('home/cart/changenum')}",
+                "type": "post",
+                "data": data,
+                "dataType": "json",
+                "success": function (res) {
+                    if (res.code !== 200) {
+                        alert(res.msg);
+                        return;
+                    }
+                    //将新的数量展示到页面
+                    $(element).closest('ul').find('.current_number').val(number);
+                    //将新的数量修改到当前行ul的number属性上，用于出错后恢复数据的
+                    $(element).closest('ul').attr('number', number);
+                    //重新计算小计金额
+                    //取当前行的单价
+                    var price = parseFloat($(element).closest('ul').find('.price').html());
+                    //计算小计金额
+                    var sum = price * number;
+                    //将小计金额放到页面中
+                    $(element).closest('ul').find('.sum').html(sum);
+                    //重新计算已选商品数量和金额
+                    change_total();
+                }
+            })
+        };
+
         // 重新计算已选商品数量和金额
         var change_total = function () {
             // 获取到选中行 row_check选中的
@@ -293,19 +332,75 @@
         change_total();
 
         //修改购买数量
-		//+号
+        //+号
         $('.plus').click(function () {
             var number = parseInt($(this).closest('ul').find('.current_number').val());
             number += 1;
-            $(this).closest('ul').find('.current_number').val(number);
+            //调用封装的函数
+            change_num(number, this);
         });
+
         //-号
         $('.mins').click(function () {
             var number = parseInt($(this).closest('ul').find('.current_number').val());
             if (number == 1) return;
             number -= 1;
-            $(this).closest('ul').find('.current_number').val(number);
+
+            //调用封装的函数
+            change_num(number, this);
+        });
+
+        //input输入框直接修改
+        $('.current_number').change(function () {
+            var number = $(this).val();
+            //检测输入的值 是否数字
+            if (isNaN(number)) {
+                //不是数字
+                alert('购买数量必须是数字');
+                var old_number = $(this).closest('ul').attr('number');
+                $(this).val(old_number);
+                return;
+            }
+            if (parseInt(number) != number || number <= 0) {
+                //数量必须是正整数
+                alert('购买数量必须是正整数');
+                var old_number = $(this).closest('ul').attr('number');
+                $(this).val(old_number);
+                return;
+            }
+            //调用封装的函数
+            change_num(number, this);
+        });
+
+        //删除
+        $('.delete').click(function () {
+            //获取id 删除条件参数
+            var data = {
+                "id": $(this).closest('ul').attr('cart_id'),
+            };
+            //"that"存储着$('.delete')这个触发事件的标签，后续需要用到
+            var that = this;
+            //发送ajax请求
+            $.ajax({
+                "url": "{:url('home/cart/delcart')}",
+                "type": "post",
+                "data": data,
+                "dataType": "json",
+                "success": function (res) {
+                    if (res.code !== 200) {
+                        alert(res.msg);return;
+                    }
+                    //将当前行从页面移除
+                    //这里不能用$(this)，因为在ajax里的$(this)就是指向ajax对象的，
+                    //所以我们在上面保存了一个"that"变量，指向$('.delete')这个触发事件的标签
+                    //$(that).closest('ul').parent().remove();
+                    $(that).closest('.cart-list').remove();
+                    //重新计算已选商品数量和金额
+                    change_total();
+                }
+            });
         });
     });
 </script>
+
 
