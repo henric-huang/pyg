@@ -153,4 +153,40 @@ class CartLogic
             cookie('cart', $data, 7 * 3600 * 24);
         }
     }
+
+    /**
+     * 修改选中状态
+     * @param $id 修改条件
+     * @param $is_selected 状态 1 0
+     */
+    public static function changeStatus($id, $is_selected)
+    {
+        //登录状态 登录 修改数据表；未登录修改cookie
+        if (session('?user_info')) {
+            //登录 修改数据表；
+            $user_id          = session('user_info.id');
+            $where['user_id'] = $user_id;
+            if ($id != 'all') {
+                $where['id'] = $id;
+            }
+            Cart::where($where)->update(['is_selected' => $is_selected]);
+        } else {
+            //未登录修改cookie
+            //取出所有cookie购物车数据
+            $data = cookie('cart') ?: [];
+            //$id 就是一个下标
+            if ($id == 'all') {
+                //全部修改
+                foreach ($data as &$v) {
+                    $v['is_selected'] = $is_selected;
+                }
+                unset($v);
+            } else {
+                //修改一个
+                $data[$id]['is_selected'] = $is_selected;
+            }
+            //重新保存到cookie
+            cookie('cart', $data, 24 * 3600 * 7);
+        }
+    }
 }

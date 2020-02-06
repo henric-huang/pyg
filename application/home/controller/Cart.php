@@ -105,6 +105,32 @@ class Cart extends Base
         die();
     }
 
+    /**
+     * ajax修改选中状态
+     */
+    public function changestatus()
+    {
+        //接收参数
+        $pramas = input();
+        //参数检测
+        $validate = $this->validate($pramas, [
+            'id'     => 'require',
+            'status' => 'require|in:0,1',
+        ]);
+//        dump($pramas);die;
+        if ($validate !== true) {
+            $res = ['code' => 400, 'msg' => '参数错误'];
+            echo json_encode($res);
+            die();
+        }
+        //处理数据
+        CartLogic::changeStatus($pramas['id'], $pramas['status']);
+        //返回数据
+        $res = ['code' => 200, 'msg' => 'success'];
+        echo json_encode($res);
+        die();
+    }
+
     //用于测试加入购物车功能 cookie的情况
     public function test()
     {

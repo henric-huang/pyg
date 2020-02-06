@@ -308,6 +308,24 @@
             $('.row_check').prop('checked', status);
             //重新计算已选商品数量和金额
             change_total();
+            //修改选中状态到购物车数据中
+			//参数  id  status
+            var data = {
+                "id":"all",
+                "status":$(this).prop('checked') ? 1 :0 ,
+            };
+            //发送ajax请求
+            $.ajax({
+                "url":"{:url('home/cart/changestatus')}",
+                "type":"post",
+                "data":data,
+                "dataType":"json",
+                "success":function (res) {
+                    if (res.code !== 200){
+                        alert(res.msg);return;
+                    }
+                }
+            })
         });
 
         //每一行的checkbox选中时
@@ -316,6 +334,24 @@
             check_all();
             //重新计算已选商品数量和金额
             change_total();
+            //修改选中状态到购物车数据中
+			//参数  id  status
+            var data = {
+                "id": $(this).closest('ul').attr('cart_id'),
+                "status": $(this).prop('checked') ? 1 : 0,
+            };
+            //发送ajax请求
+            $.ajax({
+                "url":"{:url('home/cart/changestatus')}",
+                "type":"post",
+                "data":data,
+                "dataType":"json",
+                "success":function (res) {
+                    if (res.code !== 200){
+                        alert(res.msg);return;
+                    }
+                }
+            });
         });
 
         //页面刷新，直接判断 全选按钮是否应该也变成选中
@@ -388,7 +424,8 @@
                 "dataType": "json",
                 "success": function (res) {
                     if (res.code !== 200) {
-                        alert(res.msg);return;
+                        alert(res.msg);
+                        return;
                     }
                     //将当前行从页面移除
                     //这里不能用$(this)，因为在ajax里的$(this)就是指向ajax对象的，
