@@ -148,7 +148,9 @@ class Login extends Controller
             //迁移cookie购物车数据到数据表
             CartLogic::cookieToDb();
             //页面跳转
-            $this->redirect('home/index/index');
+            //
+            $back_url = session('back_url') ?: 'home/index/index';
+            $this->redirect($back_url);
         } else {
             $this->error('用户名或密码错误');
         }
@@ -208,9 +210,9 @@ class Login extends Controller
         //迁移cookie购物车数据到数据表
         CartLogic::cookieToDb();
         //页面跳转
-        $this->redirect('home/index/index');
+        $back_url = session('back_url') ?: 'home/index/index';
+        $this->redirect($back_url);
     }
-
 
 
 }

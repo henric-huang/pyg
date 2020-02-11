@@ -250,4 +250,11 @@ return [
         'gateway' => 'https://way.jd.com/chuangxin/dxjk',
         'appkey'  => '5be9d15fef733ed5e5aea14dcf22b65d',
     ],
+
+    //支付方式
+    'pay_type' => [
+        'alipay' => ['pay_code' => 'alipay', 'pay_name' => '支付宝', 'logo' => '/static/home/img/_/pay2.jpg'],
+        'wechat' => ['pay_code' => 'wechat', 'pay_name' => '微信支付', 'logo' => '/static/home/img/_/pay3.jpg'],
+        'union'  => ['pay_code' => 'union', 'pay_name' => '银联', 'logo' => '/static/home/img/_/pay4.jpg'],
+    ],
 ];

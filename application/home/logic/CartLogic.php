@@ -189,4 +189,5 @@ class CartLogic
             cookie('cart', $data, 24 * 3600 * 7);
         }
     }
+
 }

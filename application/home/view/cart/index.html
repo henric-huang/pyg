@@ -309,20 +309,21 @@
             //重新计算已选商品数量和金额
             change_total();
             //修改选中状态到购物车数据中
-			//参数  id  status
+            //参数  id  status
             var data = {
-                "id":"all",
-                "status":$(this).prop('checked') ? 1 :0 ,
+                "id": "all",
+                "status": $(this).prop('checked') ? 1 : 0,
             };
             //发送ajax请求
             $.ajax({
-                "url":"{:url('home/cart/changestatus')}",
-                "type":"post",
-                "data":data,
-                "dataType":"json",
-                "success":function (res) {
-                    if (res.code !== 200){
-                        alert(res.msg);return;
+                "url": "{:url('home/cart/changestatus')}",
+                "type": "post",
+                "data": data,
+                "dataType": "json",
+                "success": function (res) {
+                    if (res.code !== 200) {
+                        alert(res.msg);
+                        return;
                     }
                 }
             })
@@ -335,20 +336,21 @@
             //重新计算已选商品数量和金额
             change_total();
             //修改选中状态到购物车数据中
-			//参数  id  status
+            //参数  id  status
             var data = {
                 "id": $(this).closest('ul').attr('cart_id'),
                 "status": $(this).prop('checked') ? 1 : 0,
             };
             //发送ajax请求
             $.ajax({
-                "url":"{:url('home/cart/changestatus')}",
-                "type":"post",
-                "data":data,
-                "dataType":"json",
-                "success":function (res) {
-                    if (res.code !== 200){
-                        alert(res.msg);return;
+                "url": "{:url('home/cart/changestatus')}",
+                "type": "post",
+                "data": data,
+                "dataType": "json",
+                "success": function (res) {
+                    if (res.code !== 200) {
+                        alert(res.msg);
+                        return;
                     }
                 }
             });
@@ -437,6 +439,17 @@
                 }
             });
         });
+
+        //结算
+        $('.sum-btn').click(function () {
+            //判断是否有选中的购物记录
+            if ($('.row_check:checked').length == 0) {
+                alert('请选择要结算的商品');
+                return;
+            }
+            //跳转到结算页
+            location.href = "{:url('home/order/create')}";
+        })
     });
 </script>
 
