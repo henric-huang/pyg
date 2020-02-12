@@ -9,6 +9,8 @@ use think\Collection;
 
 class OrderLogic
 {
+    private static $arr;
+
     public static function getCartDataWithGoods()
     {
         $user_id      = session('user_info.id');
@@ -36,10 +38,11 @@ class OrderLogic
             $total_price  += $v['number'] * $v['goods_price'];
         }
         unset($v);
-        return [
+        self::$arr = [
             'cart_data'    => $cart_data,
             'total_number' => $total_number,
             'total_price'  => $total_price,
         ];
+        return self::$arr;
     }
 }

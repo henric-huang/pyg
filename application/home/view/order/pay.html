@@ -45,7 +45,6 @@
                     "{/if}><img src="{$v.logo}"></li>
                     {/foreach}
                 </ul>
-
             </div>
             <div class="hr"></div>
 
@@ -91,12 +90,33 @@
     </div>
 
 </div>
-
+<form id="payForm" action="{:url('home/order/pay')}" method="post">
+    <input type="hidden" name="order_sn" value="{$order_sn}">
+    <input type="hidden" name="pay_code" value="">
+</form>
 
 <script type="text/javascript">
     $(function () {
         $("ul.payType li").click(function () {
             $(this).css("border", "2px solid #E4393C").siblings().css("border-color", "#ddd");
+        });
+
+        //去支付
+        $('.submit').click(function () {
+            //获取选择的支付方式
+            var pay_code = "";
+            $('.payType li').each(function (i,v) {
+                //i是下标,v是li标签
+                //console.log($(v).css('border-color'));
+                if($(v).css('border-color') == 'rgb(228, 57, 60)'){
+                    //console.log($(v).attr('pay_code'));
+                    pay_code= $(v).attr('pay_code');
+                }
+            });
+            //将支付方式pay_code放到表单中
+            $('input[name=pay_code]').val(pay_code);
+            //发送请求 表单提交
+            $('#payForm').submit();
         })
     })
 </script>
