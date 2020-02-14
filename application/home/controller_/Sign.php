@@ -3,7 +3,6 @@
 namespace app\home\controller;
 
 use think\Controller;
-use think\Request;
 
 class Sign extends Controller
 {
@@ -89,5 +88,4 @@ class Sign extends Controller
             echo 'fail';die;
         }
     }
-
 }
