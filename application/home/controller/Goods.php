@@ -2,6 +2,8 @@
 
 namespace app\home\controller;
 
+use app\common\model\Admin;
+use think\Collection;
 use think\Controller;
 
 class Goods extends Base
@@ -33,7 +35,6 @@ class Goods extends Base
             } catch (\Exception $e) {
                 $this->error('服务器异常');
             }
-
         }
         return view('index', ['list' => $list, 'cate_name' => $cate_name]);
     }
@@ -44,6 +45,10 @@ class Goods extends Base
         //$id 是商品id
         //查询商品信息、商品相册、规格商品SKU
         $goods = \app\common\model\Goods::with('goods_images,spec_goods')->find($id);
+        // SELECT * FROM `pyg_goods` WHERE `id` = 65 LIMIT 1;
+        // SELECT * FROM `pyg_goods_images` WHERE `goods_id` = 65
+        // SELECT * FROM `pyg_spec_goods` WHERE `goods_id` = 65
+
         //将商品的第一个规格商品的信息，替换到$goods中
         if (!empty($goods['spec_goods'])) {
             if ($goods['spec_goods'][0]['price'] > 0) {

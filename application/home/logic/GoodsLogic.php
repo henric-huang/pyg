@@ -41,6 +41,7 @@ class GoodsLogic extends Controller
         ];
         //进行搜索
         $results = $es->search_doc('goods_index', 'goods_type', $body);
+//        dump($results);die;
         //获取数据
         $data = array_column($results['hits']['hits'], '_source');
         $total = $results['hits']['total']['value'];

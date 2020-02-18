@@ -20,3 +20,5 @@ class Base extends Controller
         $this->assign('category', $category);
     }
 }
+
+
