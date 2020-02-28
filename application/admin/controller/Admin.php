@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Role;
+use think\Collection;
 use think\Controller;
 use think\Request;
 
@@ -40,7 +41,7 @@ class Admin extends Base
     /**
      * 保存新建的资源
      *
-     * @param  \think\Request  $request
+     * @param \think\Request $request
      * @return \think\Response
      */
     public function save(Request $request)
@@ -49,10 +50,10 @@ class Admin extends Base
         //参数验证
         $validate = $this->validate($data, [
             'username|管理员账号' => 'require|unique:admin',
-            'email|邮箱' => 'require|email',
-            'role_id|角色' => 'require|integer|gt:0'
+            'email|邮箱'       => 'require|email',
+            'role_id|角色'     => 'require|integer|gt:0'
         ]);
-        if($validate!==true){
+        if ($validate !== true) {
             return json(['code' => '500', 'msg' => $validate]);
         }
         $data['nickname'] = $data['username'];
@@ -63,7 +64,7 @@ class Admin extends Base
     /**
      * 显示指定的资源
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function read($id)
@@ -74,7 +75,7 @@ class Admin extends Base
     /**
      * 显示编辑资源表单页.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function edit($id)
@@ -89,39 +90,39 @@ class Admin extends Base
     /**
      * 保存更新的资源
      *
-     * @param  \think\Request  $request
-     * @param  int  $id
+     * @param \think\Request $request
+     * @param int $id
      * @return \think\Response
      */
     public function update(Request $request, $id)
     {
-        $data = input();
+        $data     = input();
         $validate = $this->validate($data, [
-            'email|邮箱' => 'require|email',
+            'email|邮箱'   => 'require|email',
             'role_id|角色' => 'require|integer|gt:0'
         ]);
-        if($validate!==true){
+        if ($validate !== true) {
             return json(['code' => '500', 'msg' => $validate]);
         }
         unset($data['username']);
         unset($data['password']);
-        \app\admin\model\Admin::update($data,['id' => $id], true);
+        \app\admin\model\Admin::update($data, ['id' => $id], true);
         return json(['code' => '200', 'msg' => '操作成功']);
     }
 
     /**
      * 删除指定资源
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function delete($id)
     {
-        if($id == session('manager_info.id')){
+        if ($id == session('manager_info.id')) {
             return json(['code' => '500', 'msg' => '操作失败,您无权删除自己']);
         }
         $info = \app\admin\model\Admin::find($id);
-        if($info && $info->role_id == 1 && 'admin' != session('manager_info.username')){
+        if ($info && $info->role_id == 1 && 'admin' != session('manager_info.username')) {
             return json(['code' => '500', 'msg' => '操作失败,您无权删除超级管理员']);
         }
         \app\admin\model\Admin::destroy($id);

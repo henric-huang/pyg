@@ -85,16 +85,18 @@ if (!function_exists('curl_request')) {
     {
         //初始化请求 进入传入的网址$url
         $ch = curl_init($url);
-        //默认是get请求。如果是post请求 设置请求方式和请求参数
-        //get请求不用设置
+
+        //默认是get请求。get请求不用设置请求方式和请求参数
+        //如果是post请求 要特别设置请求方式和请求参数
         if ($post) {
             //表明是POST请求
             curl_setopt($ch, CURLOPT_POST, true);
             //传入POST请求参数
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         }
-        //如果是https协议，禁止从服务器验证本地证书
-        //http协议不用设置
+
+        //默认是http协议。http协议不用设置什么
+        //如果是https协议，要特别设置禁止从服务器验证本地证书
         if ($https) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -145,7 +147,6 @@ if (!function_exists('sendmsg')) {
             }*/
             return '短信发送失败';
         }
-
     }
 }
 

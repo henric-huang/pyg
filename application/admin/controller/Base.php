@@ -25,7 +25,6 @@ class Base extends Controller
             session('manager_info', $info);
         }*/
 
-
         //登录验证
         if (!session('manager_info')) {
             //没有登录 跳转到登录页面
@@ -33,50 +32,13 @@ class Base extends Controller
         }
         //先检测权限
         $this->checkauth();
-        //调用getnav方法
+        //调用getnav方法,获取登录用户的菜单权限
         $this->getnav();
 
         $action = request()->action();
         if (in_array($action, ['index', 'read'])) {
             $this->view->engine->layout(true);
         }
-
-    }
-
-    //获取左侧菜单权限
-    public function getnav()
-    {
-        //获取当前登录的管理员，左侧菜单显示的权限
-        //获取当前管理员的信息（role_id）
-        $role_id = session('manager_info.role_id');
-        //如果是超级管理员，直接查询权限表
-        if ($role_id == 1) {
-            //查询所有菜单权限
-            $nav = Auth::where('is_nav', 1)->select();
-        } else {
-            //如果是普通管理员，先查询角色表 取到role_auth_ids
-            $role          = Role::find($role_id);
-            $role_auth_ids = $role->role_auth_ids;
-            //查询拥有的菜单权限
-            $nav = Auth::where([
-                'is_nav' => 1,
-                'id'     => ['in', $role_auth_ids]
-            ])->select();
-        }
-//        dump($nav);die();
-        $nav = (new \think\Collection($nav))->toArray();
-//        dump($nav);die();
-        $nav = get_tree_list($nav);
-//        dump($nav);die();
-        //变量赋值
-        $this->assign('nav', $nav);
-
-        $controller         = request()->controller();
-        $action             = request()->action();
-        $auth               = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
-        $current_auth_ids   = explode('_', $auth['pid_path']);
-        $current_auth_ids[] = $auth['id'];
-        $this->assign('current_auth_ids', $current_auth_ids);
     }
 
     //检测当前访问的权限
@@ -93,12 +55,9 @@ class Base extends Controller
         $controller = request()->controller();
         $action     = request()->action();
         if (strtolower($controller) == 'index' && strtolower($action) == 'index') {
-//            if ($controller == 'Index' && $action == 'index'){
             //特殊页面 比如后台首页，不需要检测权限
             return;
         }
-        $ac = $controller . '-' . $action;
-        //判断$ac 是否在已经拥有的权限role_auth_ac里面
         //查询当前角色信息
         $role          = Role::find($role_id);
         $auth          = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
@@ -106,8 +65,46 @@ class Base extends Controller
         if (!in_array($auth['id'], $role_auth_ids)) {
             $this->error('没有权限访问', 'admin/index/index');
         }
-
     }
+
+
+    //获取左侧菜单权限
+    public function getnav()
+    {
+        //获取当前登录的管理员，左侧菜单显示的权限
+        //获取当前管理员的信息（role_id）
+        $role_id = session('manager_info.role_id');
+        //如果是超级管理员，直接查询权限表
+        if ($role_id == 1) {
+            //查询所有菜单权限
+            $nav = Auth::where('is_nav', 1)->select();
+        } else {
+            //如果是普通管理员，先查询角色表 取到role_auth_ids
+            $role          = Role::find($role_id);
+            $role_auth_ids = $role->role_auth_ids;
+//            $role_auth_ids = explode(',',$role_auth_ids);
+//            dump($role_auth_ids);die();
+            //查询拥有的菜单权限
+            $nav = Auth::where([
+                'is_nav' => 1,
+                'id'     => ['in', $role_auth_ids]
+            ])->select();
+        }
+        $nav = (new \think\Collection($nav))->toArray();
+        $nav = get_tree_list($nav);
+//        dump($nav);die();
+        //变量赋值
+        $this->assign('nav', $nav);
+
+        $controller         = request()->controller();
+        $action             = request()->action();
+        $auth               = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
+        $current_auth_ids   = explode('_', $auth['pid_path']);
+        $current_auth_ids[] = $auth['id'];
+//        dump($current_auth_ids);die();
+        $this->assign('current_auth_ids', $current_auth_ids);
+    }
+
 
     public function response($code = 200, $msg = 'success', $data = [])
     {
@@ -116,8 +113,9 @@ class Base extends Controller
             'msg'  => $msg,
             'data' => $data
         ];
-//        echo json_encode($res, JSON_UNESCAPED_UNICODE);die;
-        json($res)->send();
+        echo json_encode($res, JSON_UNESCAPED_UNICODE);
+        die;
+//        json($res)->send();
         die;
     }
 

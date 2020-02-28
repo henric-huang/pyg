@@ -20,8 +20,7 @@ class Upload extends BaseApi
             $this->fail('请上传文件');
         }
         //图片移动 /public/uploads/goods/  /public/uploads/category/  /public/uploads/brand/
-        $info = $file->validate(['size' => 10 * 1024 * 1024, 'ext' => 'jpg,jpeg,png,gif'])
-            ->move(ROOT_PATH . 'public' . DS . 'uploads' . DS . $type);
+        $info = $file->validate(['size' => 10 * 1024 * 1024, 'ext' => 'jpg,jpeg,png,gif'])->move(ROOT_PATH . 'public' . DS . 'uploads' . DS . $type);
         if ($info) {
             //返回图片路径  /uploads/goods/20190715/dsfdsfas.jpg
             $logo = DS . 'uploads' . DS . $type . DS . $info->getSaveName();
@@ -52,6 +51,7 @@ class Upload extends BaseApi
             if (!is_dir($dir)) {
                 mkdir($dir);
             }
+//            dump($dir);die; // "F:\website\php70\thinkphp\Myself\pyg\public\uploads\goods"
             $info = $file->validate(['size' => 10 * 1024 * 1024, 'ext' => 'jpg,jpeg,png,gif'])->move($dir);
             if ($info) {
                 //成功 拼接图片路径

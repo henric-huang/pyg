@@ -14,7 +14,7 @@ class Login extends BaseApi
     {
         // 验证码标识
         $uniqid = uniqid(mt_rand(100000, 999999));
-        // dump($uniqid);  // 1443585dff1a8151996
+         //dump($uniqid);die();  // 1443585dff1a8151996
 
         //返回数据 验证码图片路径、验证码标识
         $data = [

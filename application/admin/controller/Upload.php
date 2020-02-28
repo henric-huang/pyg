@@ -17,6 +17,7 @@ class Upload extends Base
     {
         $params = input();
         $type = $params['image_type'] ?? 'other';
+//        $type = $params['image_type'] ?: 'other';
         //获取文件信息（对象）
         $file = request()->file('logo');
         if (empty($file)) {
@@ -25,6 +26,7 @@ class Upload extends Base
         }
         //将文件移动到指定的目录（public 目录下  uploads目录 goods目录）
         $dir = ROOT_PATH . 'public' . DS . 'uploads' . DS . $type;
+//        dump($dir);die();
         if(!is_dir($dir)) mkdir($dir);
         $info = $file->validate(['size' => 10*1024*1024, 'ext' => ['jpg', 'png', 'gif', 'jpeg']])->move($dir);
         if (empty($info)) {
@@ -48,6 +50,7 @@ class Upload extends Base
         }
         //将文件移动到指定的目录（public 目录下  uploads目录 goods目录）
         $dir = ROOT_PATH . 'public' . DS . 'uploads' . DS . $type;
+//        dump($dir);die();
         if(!is_dir($dir)) mkdir($dir);
         $info = $file->validate(['size' => 10*1024*1024, 'ext' => ['jpg', 'png', 'gif', 'jpeg']])->move($dir);
         if (empty($info)) {

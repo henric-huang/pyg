@@ -21,9 +21,10 @@
                     <ul class="addr-detail">
                         {foreach $address as $v}
                         <li class="addr-item">
-                            <div address_id="{$v.id}" class="con name {if ($v.is_selected)selected{/if}}"><a
-                                    href="javascript:;">
-                                <em>{$v.consignee}</em><span title="点击取消选择">&nbsp;</span></a></div>
+                            <div address_id="{$v.id}" class="con name {if($v.is_default)}selected{/if}">
+                                <a href="javascript:;">
+                                    <em>{$v.consignee}</em><span title="点击取消选择">&nbsp;</span></a>
+                            </div>
                             <div class="con address">
                                 <span class="consignee_name">{$v.consignee}</span>
                                 <span class="consignee_address">{$v.area} {$v.address}</span>
@@ -224,8 +225,10 @@
         var show_address = function (element) {
             //获取到选中的地址信息
             if (element) {
+                //获取到点击的地址
                 var li = $(element).closest('li');
             } else {
+                //获取到默认地址
                 var li = $('.addressInfo').find('.name.selected').closest('li');
             }
             var consignee_address = li.find('.consignee_address').html();
@@ -251,5 +254,6 @@
             $('#orderForm').submit();
         })
     })
+
 </script>
 

@@ -82,6 +82,7 @@ class Goods extends Model
 
     //获取商品以及sku信息
     public static function getGoodsWithSpec($spec_goods_id, $goods_id)
+//    public function getGoodsWithSpec($spec_goods_id, $goods_id)
     {
         //如果有sku的id， 就以之作为查询条件
         if ($spec_goods_id) {
@@ -97,6 +98,13 @@ class Goods extends Model
             ->field('t1.*, t2.value_ids, t2.value_names, t2.price, t2.cost_price as cost_price2, t2.store_count')
             ->where($where)
             ->find();
+
+        /*$goods = $this->alias('t1')
+            ->join('pyg_spec_goods t2', 't1.id=t2.goods_id', 'left')
+            ->field('t1.*, t2.value_ids, t2.value_names, t2.price, t2.cost_price as cost_price2, t2.store_count')
+            ->where($where)
+            ->find();*/
+
         //如果sku信息中，price  cost_price 大于0，则覆盖商品信息中的对应字段
         if ($goods['price'] > 0) {
             $goods['goods_price'] = $goods['price'];

@@ -9,7 +9,7 @@ class Cart extends Base
     //加入购物车  表单提交
     public function addcart()
     {
-        if(request()->isGet()){
+        if (request()->isGet()) {
             //如果是get请求 跳转到首页
             $this->redirect('home/index/index');
         }
@@ -17,11 +17,11 @@ class Cart extends Base
         $params = input();
         //参数检测
         $validate = $this->validate($params, [
-            'goods_id' => 'require|integer|gt:0',
-            'number' => 'require|integer|gt:0',
+            'goods_id'      => 'require|integer|gt:0',
+            'number'        => 'require|integer|gt:0',
             'spec_goods_id' => 'integer|gt:0',
         ]);
-        if($validate !== true){
+        if ($validate !== true) {
             $this->error($validate);
         }
         //处理数据 调用封装好的方法
@@ -29,6 +29,10 @@ class Cart extends Base
         //结果页面展示
         //查询商品相关信息以及SKU信息
         $goods = \app\common\model\Goods::getGoodsWithSpec($params['spec_goods_id'], $params['goods_id']);
+
+        /*$info  = new  \app\common\model\Goods;
+        $goods = $info->getGoodsWithSpec($params['spec_goods_id'], $params['goods_id']);*/
+
         return view('addcart', ['goods' => $goods, 'number' => $params['number']]);
     }
 
@@ -37,9 +41,13 @@ class Cart extends Base
         //查询所有的购物记录
         $list = \app\home\logic\CartLogic::getAllCart();
         //对每一条购物记录 查询商品相关信息（商品信息和SKU信息）
-        foreach($list as &$v){
+        foreach ($list as &$v) {
             //$v['goods_id']  $v['spec_goods_id']
             $v['goods'] = \app\common\model\Goods::getGoodsWithSpec($v['spec_goods_id'], $v['goods_id'])->toArray();
+
+            /*$info       = new  \app\common\model\Goods;
+            $v['goods'] = $info->getGoodsWithSpec($v['spec_goods_id'], $v['goods_id'])->toArray();*/
+
         }
         unset($v);
         return view('index', ['list' => $list]);
@@ -54,18 +62,20 @@ class Cart extends Base
         $params = input();
         //参数检测
         $validate = $this->validate($params, [
-            'id' => 'require',
+            'id'     => 'require',
             'number' => 'require|integer|gt:0'
         ]);
-        if($validate !== true){
+        if ($validate !== true) {
             $res = ['code' => 400, 'msg' => '参数错误'];
-            echo json_encode($res);die;
+            echo json_encode($res);
+            die;
         }
         //处理数据
         \app\home\logic\CartLogic::changeNum($params['id'], $params['number']);
         //返回数据
         $res = ['code' => 200, 'msg' => 'success'];
-        echo json_encode($res);die;
+        echo json_encode($res);
+        die;
     }
 
     /**
@@ -84,15 +94,17 @@ class Cart extends Base
             echo json_encode($res);die;
         }*/
 
-        if(!isset($params['id']) || empty($params['id'])){
+        if (!isset($params['id']) || empty($params['id'])) {
             $res = ['code' => 400, 'msg' => '参数错误'];
-            echo json_encode($res);die;
+            echo json_encode($res);
+            die;
         }
         //处理数据
         \app\home\logic\CartLogic::delCart($params['id']);
         //返回数据
         $res = ['code' => 200, 'msg' => 'success'];
-        echo json_encode($res);die;
+        echo json_encode($res);
+        die;
     }
 
     /**
@@ -104,17 +116,19 @@ class Cart extends Base
         $params = input();
         //参数检测
         $validate = $this->validate($params, [
-            'id' => 'require',
+            'id'     => 'require',
             'status' => 'require|in:0,1'
         ]);
-        if($validate !== true){
+        if ($validate !== true) {
             $res = ['code' => 400, 'msg' => $validate];
-            echo json_encode($res);die;
+            echo json_encode($res);
+            die;
         }
         //处理数据
         \app\home\logic\CartLogic::changeStatus($params['id'], $params['status']);
         //返回数据
         $res = ['code' => 200, 'msg' => 'success'];
-        echo json_encode($res);die;
+        echo json_encode($res);
+        die;
     }
 }

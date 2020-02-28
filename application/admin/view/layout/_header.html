@@ -1,15 +1,14 @@
 <header class="navbar-wrapper">
     <div class="navbar navbar-fixed-top">
-        <div class="container-fluid cl"><a class="logo navbar-logo f-l mr-10 hidden-xs" href="/">品优购后台管理系统</a> <a
-                class="logo navbar-logo-m f-l mr-10 visible-xs" href="/">品优购后台管理系统</a> <span
-                class="logo navbar-slogan f-l mr-10 hidden-xs">v3.0</span> <a aria-hidden="false"
-                                                                              class="nav-toggle Hui-iconfont visible-xs"
-                                                                              href="javascript:;">&#xe667;</a>
+        <div class="container-fluid cl"><a class="logo navbar-logo f-l mr-10 hidden-xs" href="/">品优购后台管理系统</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/">品优购后台管理系统</a>
+            <span class="logo navbar-slogan f-l mr-10 hidden-xs">v3.0</span>
+            <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
             <nav id="top_nav" class="nav navbar-nav">
                 <ul class="cl">
                     {foreach $nav as $k => $nav_one}
-                    <li style="{if($nav_one.id == $current_auth_ids[1])}background-color:gray;{/if}"><a
-                            href="javascript:;" data-id="{$nav_one.id}">{$nav_one.auth_name}</a></li>
+                    <li style="{if($nav_one.id == $current_auth_ids[1])}background-color:gray;{/if}">
+                        <a href="javascript:;" data-id="{$nav_one.id}">{$nav_one.auth_name}</a>
+                    </li>
                     {/foreach}
                 </ul>
             </nav>

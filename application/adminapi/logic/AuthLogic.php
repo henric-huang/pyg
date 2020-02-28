@@ -6,6 +6,14 @@ class AuthLogic
     // 权限检测
     public static function check()
     {
+        /*//或者这样判断特殊页面
+        $no_login = ['index/index'];//数组里还可以继续再加特殊页面
+        $path     = strtolower(request()->controller() . '/' . request()->action());
+        if (in_array($path, $no_login)) {
+            //不需要检测 （首页都有权限访问）
+            return true;
+        }*/
+
         //判断是否特殊页面（比如首页，不需要检测）
         $controller = request()->controller();  //返回的是首字母大写
         $action     = request()->action();
@@ -13,6 +21,7 @@ class AuthLogic
             //不需要检测 （首页都有权限访问）
             return true;
         }
+
         //获取到管理员的角色id
         $user_id = input('user_id');
         $admin   = \app\admin\model\Admin::find($user_id);

@@ -10,8 +10,10 @@
             <h4 class="tit-txt"><span class="success-icon"></span><span
                     class="success-info">订单提交成功，请您及时付款，以便尽快为您发货~~</span></h4>
             <div class="paymark">
-                <span class="fl">请您在提交订单<em
-                        class="orange time">30分钟</em>之内完成支付，超时订单会自动取消。订单号：<em>{$order_sn}</em></span>
+                <span class="fl">请您在提交订单
+                    <em class="orange time">30分钟</em>
+                    之内完成支付，超时订单会自动取消。订单号：<em>{$order_sn}</em>
+                </span>
                 <span class="fr"><em class="sui-lead">应付金额：</em><em class="orange money">￥{$total_price}</em></span>
             </div>
         </div>
@@ -42,7 +44,8 @@
                     {foreach $pay_type as $v}
                     <li class="selected" pay_code="{$v.pay_code}" {if($v.pay_code=='alipay')}style="border:2px solid
                         rgb(228,57,60);
-                    "{/if}><img src="{$v.logo}"></li>
+                    "{/if}><img src="{$v.logo}">
+                    </li>
                     {/foreach}
                 </ul>
             </div>
@@ -105,12 +108,12 @@
         $('.submit').click(function () {
             //获取选择的支付方式
             var pay_code = "";
-            $('.payType li').each(function (i,v) {
+            $('.payType li').each(function (i, v) {
                 //i是下标,v是li标签
                 //console.log($(v).css('border-color'));
-                if($(v).css('border-color') == 'rgb(228, 57, 60)'){
+                if ($(v).css('border-color') == 'rgb(228, 57, 60)') {
                     //console.log($(v).attr('pay_code'));
-                    pay_code= $(v).attr('pay_code');
+                    pay_code = $(v).attr('pay_code');
                 }
             });
             //将支付方式pay_code放到表单中
@@ -118,5 +121,6 @@
             //发送请求 表单提交
             $('#payForm').submit();
         })
+
     })
 </script>

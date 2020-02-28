@@ -5,6 +5,7 @@ namespace app\adminapi\controller;
 use app\adminapi\logic\AuthLogic;
 use think\Controller;
 use think\Exception;
+use think\Request;
 use tools\jwt\Token;
 
 class BaseApi extends Controller
@@ -29,7 +30,7 @@ class BaseApi extends Controller
             $path = strtolower($this->request->controller() . '/' . $this->request->action());
             if (!in_array($path, $this->no_login)) {
                 //需要做登录检测
-                //$user_id = \tools\jwt\Token::getUserId();
+//                $user_id = \tools\jwt\Token::getUserId();
                 //为了方便测试，写死用户id
                 $user_id = 1;
                 if (empty($user_id)) {
@@ -64,8 +65,11 @@ class BaseApi extends Controller
             'msg'  => $msg,
             'data' => $data
         ];
-        //echo json_encode($res, true);
-        json($res)->send();die();
+        //原生php写法
+        echo json_encode($res, JSON_UNESCAPED_UNICODE);
+        die;
+        //框架写法
+        //json($res)->send();
     }
 
     /**

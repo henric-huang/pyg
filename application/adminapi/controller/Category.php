@@ -4,6 +4,7 @@ namespace app\adminapi\controller;
 
 use think\Collection;
 use think\Controller;
+use think\Image;
 use think\Request;
 
 class Category extends BaseApi
@@ -94,8 +95,12 @@ class Category extends BaseApi
             $params['pid_path_name'] = $p_info['pid_path_name'] . '/' . $p_info['cate_name'];
         }
         //logo图片处理
-        if (isset($params['logo']) && empty($params['logo'])) {
+        /*if (isset($params['logo']) && empty($params['logo'])) {
             $params['image_url'] = $params['logo'];
+        }*/
+        $params['image_url'] = isset($params['logo']) ?: '';
+        if (isset($params['image_url']) && !empty($params['image_url']) && is_file('.' . $params['image_url'])) {
+            Image::open('.' . $params['image_url'])->thumb(200, 100)->save('.' . $params['image_url']);
         }
         //添加数据
         $info = \app\common\model\Category::create($params, true);

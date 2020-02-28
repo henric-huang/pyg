@@ -18,15 +18,17 @@ class Index extends BaseApi
 
         // 测试jwt
         // 生成token
-        /*$token = Token::getToken(100);
+        $token = Token::getToken(100);
         dump($token);
         // 从token获取用户id
         $user_id = Token::getUserId($token);
         dump($user_id);
-        die();*/
+        $getToken = Token::getRequestToken();
+        dump($getToken);
+        die();
 
         //测试 关联模型
-        $info = \app\common\model\Admin::find(1);
+//        $info = \app\common\model\Admin::find(1);
 //        dump($info);
 //        dump($info->profile->idnum);
 //        $this->ok($info);
@@ -53,7 +55,7 @@ class Index extends BaseApi
         $this->ok($info);*/
 
         //以品牌表为主
-        $info = \app\common\model\Brand::with('category')->find(1);
-        $this->ok($info);
+//        $info = \app\common\model\Brand::with('category')->find(1);
+//        $this->ok($info);
     }
 }

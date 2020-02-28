@@ -185,6 +185,7 @@ class Login extends Controller
      */
     public function qqcallback()
     {
+//        echo 'I am here';die();
         //参考oauth/callback.php
         require_once("./plugins/qq/API/qqConnectAPI.php");
         $qc = new \QC();

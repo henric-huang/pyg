@@ -407,7 +407,7 @@ class Type extends BaseApi
             $this->fail('正在使用中，不能删除');
         }
         //开启事务
-        Db::startTrans();
+        \think\Db::startTrans();
         try {
             //删除数据 （商品类型、类型下的规格名、类型下的规格值、类型下的属性）
             \app\common\model\Type::destroy($id);
@@ -416,17 +416,16 @@ class Type extends BaseApi
             \app\common\model\SpecValue::destroy('type_id', $id);
             \app\common\model\Attribute::destroy('type_id', $id);
             //提交事务
-            Db::commit();
+            \think\Db::commit();
             //返回数据
             $this->ok();
         } catch (Exception $e) {
             //回滚事务
-            Db::rollback();
+            \think\Db::rollback();
             //获取错误信息
             /*$msg = $e->getMessage();
             $this->fail($msg);*/
             $this->fail('删除失败');
         }
-
     }
 }
