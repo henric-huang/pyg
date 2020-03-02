@@ -11,7 +11,8 @@ class Goods extends Base
     public function index($id = 0)
     {
         //接收参数
-        $keywords = input('keywords');
+        $keywords         = input('keywords');
+
         if (empty($keywords)) {
             //获取指定分类下商品列表
             if (!preg_match('/^\d+$/', $id)) {
@@ -29,6 +30,7 @@ class Goods extends Base
             $cate_name = $category_info['cate_name'];
         } else {
             try {
+                session('keyword', $keywords);
                 //从ES中搜索
                 $list      = \app\home\logic\GoodsLogic::search();
                 $cate_name = $keywords;

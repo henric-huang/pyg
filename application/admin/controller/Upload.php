@@ -17,6 +17,7 @@ class Upload extends Base
     {
         $params = input();
         $type = $params['image_type'] ?? 'other';
+        //dump($type);die;  // "goods"
 //        $type = $params['image_type'] ?: 'other';
         //获取文件信息（对象）
         $file = request()->file('logo');
@@ -26,7 +27,7 @@ class Upload extends Base
         }
         //将文件移动到指定的目录（public 目录下  uploads目录 goods目录）
         $dir = ROOT_PATH . 'public' . DS . 'uploads' . DS . $type;
-//        dump($dir);die();
+        //dump($dir);die();  // "F:\website\php70\thinkphp\Myself\pyg\public\uploads\goods"
         if(!is_dir($dir)) mkdir($dir);
         $info = $file->validate(['size' => 10*1024*1024, 'ext' => ['jpg', 'png', 'gif', 'jpeg']])->move($dir);
         if (empty($info)) {
@@ -36,6 +37,7 @@ class Upload extends Base
         }
         //拼接图片的访问路径
         $logo = DS . "uploads" . DS . $type . DS . $info->getSaveName();
+        //dump($logo);die();  // "\uploads\goods\20200302\bf66c08ba5f85de5ffd8a909dd860f0b.jpg"
         $this->ok($logo);
     }
     public function image()

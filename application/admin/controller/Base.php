@@ -20,10 +20,10 @@ class Base extends Controller
         parent::__construct();
 
         //测试，免登陆
-        /*if ( !session('manager_info') ) {
+        if ( !session('manager_info') ) {
             $info = \app\admin\model\Admin::find(1)->toArray();
             session('manager_info', $info);
-        }*/
+        }
 
         //登录验证
         if (!session('manager_info')) {
@@ -96,12 +96,13 @@ class Base extends Controller
         //变量赋值
         $this->assign('nav', $nav);
 
-        $controller         = request()->controller();
-        $action             = request()->action();
-        $auth               = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
-        $current_auth_ids   = explode('_', $auth['pid_path']);
+        $controller       = request()->controller();
+        $action           = request()->action();
+        $auth             = Auth::where(['auth_c' => $controller, 'auth_a' => $action])->find();
+        $current_auth_ids = explode('_', $auth['pid_path']);
+        //dump($current_auth_ids);die();  [0 => 0, 1 => 1, 2 => 90]
         $current_auth_ids[] = $auth['id'];
-//        dump($current_auth_ids);die();
+        //dump($current_auth_ids);die();  [0 => 0, 1 => 1, 2 => 90, 3 => 91]
         $this->assign('current_auth_ids', $current_auth_ids);
     }
 

@@ -21,14 +21,14 @@ class Goods extends Model
         //设置新增回调
         self::afterInsert(function ($goods) use ($es) {
             //添加文档
-            $doc              = $goods->visible(['id', 'goods_name', 'goods_desc', 'goods_price'])->toArray();
+            $doc = $goods->visible(['id', 'goods_name', 'goods_desc', 'goods_price', 'goods_logo'])->toArray();
             $doc['cate_name'] = $goods->category->cate_name;
             $es->add_doc($goods->id, $doc, 'goods_index', 'goods_type');
         });
         //设置更新回调
         self::afterUpdate(function ($goods) use ($es) {
             //修改文档
-            $doc              = $goods->visible(['id', 'goods_name', 'goods_desc', 'goods_price', 'cate_name'])->toArray();
+            $doc = $goods->visible(['id', 'goods_name', 'goods_desc', 'goods_price', 'goods_logo'])->toArray();
             $doc['cate_name'] = $goods->category->cate_name;
             $body             = ['doc' => $doc];
             $es->update_doc($goods->id, 'goods_index', 'goods_type', $body);
