@@ -676,16 +676,37 @@
             $('input[name=number]').val(number);
             //提交表单
             $('form').submit();
+
+            /*var number = $('#number').val();
+            $.ajax({
+                // url: "{:url('home/cart/addcart')}",
+                url: "/home/cart/add",
+                type: "post",
+                data: {
+                    'goods_id': {$goods.id},
+                    'spec_goods_id': spec_goods_id,
+                    'number': number
+                },
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 200) {
+                        // return;
+                        location.href = "{:url('home/cart/cart',['id'=>123,'name'=>'xiaohua'])}"
+                        // location.href = "{:url('home/cart/cart')}?data="+escape(JSON.stringify(res.data))
+                    }
+                }
+            })*/
         });
 
         //规格值选中效果
-        //先获取到id="specification"的div标签，然后再获取到它里面所有的a标签，再获取到点击的a标签
+        //先获取到id="specification"的div标签，然后发现找到它里面所有的a标签，如果它里面有a标签触发点击事件，就进入该函数
         $('#specification').find('a').click(function () {
-            //使用closest('dl')获取到a标签上一层的dl标签，再获取到它里面所有的a标签，移除class='selected'这个类
+            //使用closest('dl')获取到a标签上一层的dl标签，再找到它里面所有的a标签，移除class='selected'这个类
             $(this).closest('dl').find('a').removeClass('selected');
             // $('#specification').find('a').removeClass('selected');   //同样的效果
             //closest() 方法返回被选元素的第一个祖先元素
             //removeClass() 方法从被选的元素中移除一个或多个class类
+
             //再给当前点击的a标签加上class='selected'
             $(this).addClass('selected');
 

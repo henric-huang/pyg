@@ -12,6 +12,8 @@
 use think\Route;
 
 //后台接口域名路由 adminapi
+//这样设置之后，只有域名为"adminapi"(如"http://adminapi.pyg.com")打头的网址，才能进入到我们定义好的后台接口路由，
+//域名为"www"打头的网址就不能进入。
 Route::domain('adminapi', function () {
     //adminapi模块首页路由
     Route::get('index', 'adminapi/Index/index');
@@ -44,7 +46,11 @@ Route::domain('adminapi', function () {
     Route::resource('goods', 'adminapi/goods', [], ['id' => '\d+']);
     //删除相册照片接口
     Route::delete('delpics/:id', 'adminapi/goods/delpics', [], ['id' => '\d+']);
+
 });
+
+//测试资源路由
+Route::resource('blog', 'adminapi/blog', [], ['id' => '\d+']);
 
 
 

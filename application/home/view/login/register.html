@@ -104,6 +104,7 @@
 
         //点击发送验证码
         $('#dyMobileButton').click(function () {
+
             //获取手机号的值
             var phone = $('#phone').val();
             //手机号验证
@@ -133,6 +134,7 @@
                     return;
                 },
             })
+
             //定时器  设置60秒内不能点击发送验证码
             var time = 60;
             var interval = setInterval(function () {
@@ -146,6 +148,84 @@
                     clearInterval(interval);
                 }
             }, 1000)
+
+
+            /*//设置cookie
+            function setCookie(name, value) {
+                if (!name || !value) return;
+                var Days = 30;//默认30天
+                var exp = new Date();
+                exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+                document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + exp.toUTCString();
+            }
+
+            //获取cookie
+            function getCookie(name) {
+                var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+                if (arr != null) return decodeURIComponent(arr[2]);
+                return null;
+            }
+
+            //删除cookie
+            function delCookie(name) {
+                var exp = new Date();
+                exp.setTime(exp.getTime() - 1);
+                var cval = getCookie(name);
+                if (!cval) document.cookie = name + "=" + cval + ";expires=" + exp.toUTCString();
+            }*/
+
+            /*var curTime = new Date();
+            var now = curTime.getTime();
+            // setCookie('test', now);
+            // var ck = document.cookie = now;
+            /!*var x = document.cookie = "timeName = now;";
+            console.log(x);*!/
+            var msgTime = now - getCookie('test');
+            console.log(now);
+            console.log(getCookie('test'));
+            console.log(msgTime);*/
+
+            /*var now = Date.parse(new Date());
+            var ck = (typeof getCookie('msg') != "null") ? getCookie('msg') : 0;
+            // var ck = document.cookie;
+            var msgTime = (now - ck) / 1000;
+            console.log(now);
+            console.log(ck);
+            console.log(msgTime);
+            if (msgTime > 60) {
+                //定时器  设置60秒内不能点击发送验证码
+                var time = 60;
+                var interval = setInterval(function () {
+                    time--;
+                    if (time > 0) {
+                        $('#dyMobileButton').html('重新发送' + time + 's');
+                        $('#dyMobileButton').attr('disabled', true);
+                        setCookie('msg', Date.parse(new Date()));
+                        // console.log(document.cookie = curTime.getTime());
+                        console.log(getCookie('msg'));
+                    } else if (time == 0) {
+                        $('#dyMobileButton').html('发送验证码');
+                        $('#dyMobileButton').attr('disabled', false);
+                        delCookie('msg');
+                        clearInterval(interval);
+                    }
+                }, 1000)
+            } else if (msgTime < 60) {
+                var time = msgTime;
+                var interval = setInterval(function () {
+                    time--;
+                    if (time > 0) {
+                        $('#dyMobileButton').html('重新发送' + time + 's');
+                        $('#dyMobileButton').attr('disabled', true);
+                        setCookie('msg', Date.parse(new Date()));
+                    } else if (time = 0) {
+                        $('#dyMobileButton').html('发送验证码');
+                        $('#dyMobileButton').attr('disabled', false);
+                        delCookie('msg');
+                    }
+                }, 1000);
+            }*/
+
         });
     });
 </script>

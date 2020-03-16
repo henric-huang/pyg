@@ -11,7 +11,7 @@ class Goods extends Base
     public function index($id = 0)
     {
         //接收参数
-        $keywords         = input('keywords');
+        $keywords = input('keywords');
 
         if (empty($keywords)) {
             //获取指定分类下商品列表
@@ -84,6 +84,8 @@ class Goods extends Base
         //根据规格值ids  $value_ids [28,29,32,33]  查询spec_value表 规格名称表
         //$spec_values = \app\common\model\SpecValue::select($value_ids);
         $spec_values = \app\common\model\SpecValue::with('spec')->where('id', 'in', $value_ids)->select();
+        $spec_values = $spec_values->toArray();
+//        dump($spec_values);die;
         //为了页面展示方便，对数组结构进行转化
         /*$spec_values = [
             ['id' => 28, 'spec_id'=>23, 'spec_value'=>'白色', 'type_id'=>21, 'spec_name'=>'颜色'],
@@ -101,6 +103,12 @@ class Goods extends Base
                 ['id' => 33, 'spec_id'=>24, 'spec_value'=>'128', 'type_id'=>21, 'spec_name'=>'内存'],
             ]],
         ];*/
+        /*$spec_values = [
+            0 => ['id' => 28, 'spec_id'=>23, 'spec_value'=>'白色', 'type_id'=>21, 'spec_name'=>'颜色'],
+            1 => ['id' => 29, 'spec_id'=>23, 'spec_value'=>'黑色', 'type_id'=>21, 'spec_name'=>'颜色'],
+            2 => ['id' => 32, 'spec_id'=>24, 'spec_value'=>'64G', 'type_id'=>21, 'spec_name'=>'内存'],
+            3 => ['id' => 33, 'spec_id'=>24, 'spec_value'=>'128', 'type_id'=>21, 'spec_name'=>'内存'],
+        ];*/
         $res = [];
         foreach ($spec_values as $v) {
             $res[$v['spec_id']] = [
@@ -114,9 +122,45 @@ class Goods extends Base
             24 => [ 'spec_id'=>24, 'spec_name'=>'内存', 'spec_values'=>[]],
         ];*/
         foreach ($spec_values as $v) {
-            //$v['spec_id']
+            //如果数组中有键名，要改变数组中的元素，就要加键名指代清楚是改变哪一次（其实就算你自己未定义，也会自动转为索引数组，生成0,1,2,3...的键名，所以一定要加键名）
+            //有键名却不加键名，如这样：$res['spec_values'][] = $v;就会在原数组中生成以'spec_values'为键名的数组
+            // $res['spec_values'][] = $v;
+            /*$res = [
+                23 => [ 'spec_id'=>23, 'spec_name'=>'颜色', 'spec_values'=>[]],
+                24 => [ 'spec_id'=>24, 'spec_name'=>'内存', 'spec_values'=>[]],
+                'spec_values' => [
+                    ['id' => 28, 'spec_id'=>23, 'spec_value'=>'白色', 'type_id'=>21, 'spec_name'=>'颜色'],
+                    ['id' => 29, 'spec_id'=>23, 'spec_value'=>'黑色', 'type_id'=>21, 'spec_name'=>'颜色'],
+                    ['id' => 32, 'spec_id'=>24, 'spec_value'=>'64G', 'type_id'=>21, 'spec_name'=>'内存'],
+                    ['id' => 33, 'spec_id'=>24, 'spec_value'=>'128', 'type_id'=>21, 'spec_name'=>'内存'],
+                ]
+             ];*/
+
             $res[$v['spec_id']]['spec_values'][] = $v;
+            /*$res = [
+                23 => [ 'spec_id'=>23, 'spec_name'=>'颜色', 'spec_values'=>[
+                        ['id' => 28, 'spec_id'=>23, 'spec_value'=>'白色', 'type_id'=>21, 'spec_name'=>'颜色'],
+                        ['id' => 29, 'spec_id'=>23, 'spec_value'=>'黑色', 'type_id'=>21, 'spec_name'=>'颜色'],
+                ]],
+                24 => [ 'spec_id'=>24, 'spec_name'=>'内存', 'spec_values'=>[
+                        ['id' => 32, 'spec_id'=>24, 'spec_value'=>'64G', 'type_id'=>21, 'spec_name'=>'内存'],
+                        ['id' => 33, 'spec_id'=>24, 'spec_value'=>'128', 'type_id'=>21, 'spec_name'=>'内存'],
+            ]],
+        ];*/
         }
+//        dump($res);
+//
+//        foreach ($res as $v) {
+//            //如果不进行修改，只是进行获取，可不加键名
+//            dump($v['spec_values']);
+//            /* $res['spec_values'] = [
+//                    0 => ['id' => 28, 'spec_id'=>23, 'spec_value'=>'白色', 'type_id'=>21, 'spec_name'=>'颜色'],
+//                    1 => ['id' => 29, 'spec_id'=>23, 'spec_value'=>'黑色', 'type_id'=>21, 'spec_name'=>'颜色'],
+//                    2 => ['id' => 32, 'spec_id'=>24, 'spec_value'=>'64G', 'type_id'=>21, 'spec_name'=>'内存'],
+//                    3 => ['id' => 33, 'spec_id'=>24, 'spec_value'=>'128', 'type_id'=>21, 'spec_name'=>'内存'],
+//            }*/
+//        };die;
+
         /*$res = [
             23 => [ 'spec_id'=>23, 'spec_name'=>'颜色', 'spec_values'=>[
                 ['id' => 28, 'spec_id'=>23, 'spec_value'=>'白色', 'type_id'=>21, 'spec_name'=>'颜色'],

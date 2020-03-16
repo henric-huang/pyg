@@ -157,3 +157,93 @@ if (!function_exists('encrypt_phone')) {
         return substr($phone, 0, 3) . '****' . substr($phone, 7);
     }
 }
+
+if (!function_exists('sendEmail')) {
+    /**
+     * 邮件发送
+     * * 开始的时候，记得引用类
+     * * use PHPMailer\PHPMailer\PHPMailer;
+     * * 应用公共函数文件，函数不能定义为public类型
+     */
+    function sendEmail($content, $toemail, $title = "邮件标题")
+    {
+        // 实力化类
+        $mail = new \PHPMailer\PHPMailer\PHPMailer();
+
+        // 使用SMTP服务
+        $mail->isSMTP();
+
+        // 编码格式为utf8，不设置编码的话，中文会出现乱码
+        // $mail->CharSet = "utf8";
+        $mail->CharSet = config('mail.charset');
+
+        // 发送方的SMTP服务器地址
+        // $mail->Host = "smtp.163.com";
+        $mail->Host = config('mail.host');
+
+        // 是否使用身份验证
+        // $mail->SMTPAuth = true;
+        $mail->SMTPAuth = config('mail.smtp_auth');
+
+        // 发送方的163邮箱用户名，就是你申请163的SMTP服务使用的163邮箱
+        // $mail->Username = "henric_zg_huang@163.com";
+        $mail->Username = config('mail.username');
+
+        // 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码
+        // $mail->Password = "Huang1993";
+        $mail->Password = config('mail.password');
+
+        // 使用ssl协议方式
+        // $mail->SMTPSecure = "ssl";
+        $mail->SMTPSecure = config('mail.smtp_secure');
+
+        // 163邮箱的ssl协议方式端口号是465/994
+        // $mail->Port = 994;
+        $mail->Port = config('mail.port');
+
+        // 设置发件人信息，如邮件格式说明中的发件人，这里会显示为"品优购商城(xxxx@163.com)"，"品优购商城"是当做名字显示
+        // $mail->setFrom("henric_zg_huang@163.com", "品优购商城");
+        $mail->setFrom(config('mail.from'), config('mail.from_name'));
+
+        // 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        $mail->addAddress($toemail, '');
+
+        // 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址，Henric是当做名字显示
+        // $mail->addReplyTo("henric_zg_huang@163.com", "Henric");
+        $mail->addReplyTo(config('mail.reply_to'), config('mail.reply_to_name'));
+
+        //支持html格式内容
+        $mail->IsHTML(true);
+
+        // 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址(这个人也能收到邮件)
+        //$mail->addCC("xxx@163.com");
+
+        // 设置秘密抄送人(这个人也能收到邮件)
+        //$mail->addBCC("xxx@163.com");
+
+        // 添加附件
+        $mail->addAttachment('d:/img.jpg', '图片.jpg');
+        // $mail->addAttachment('./uploads/goods/20200312/img.jpg','美的冰箱.jpg');
+
+        //设置邮件中的图片
+        // $mail->AddEmbeddedImage('./uploads/goods/20200312/6f0264e241a2cbc02986336ee5e9afcc.jpg');
+
+        // 邮件标题
+        $mail->Subject = $title;
+
+        // 邮件正文
+        // $mail->Body = "邮件内容:" . $desc_content . "点击可以查看文章地址:" . $desc_url;
+        $mail->Body = $content;
+
+        // 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
+        //$mail->AltBody = "This is the plain text纯文本";
+
+        if (!$mail->send()) { // 发送邮件
+            return $mail->ErrorInfo;
+            // echo "Message could not be sent.";
+            // echo "Mailer Error: ".$mail->ErrorInfo;// 输出错误信息
+        } else {
+            return "发送成功";
+        }
+    }
+};

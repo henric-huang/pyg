@@ -131,4 +131,47 @@ class Cart extends Base
         echo json_encode($res);
         die;
     }
+
+    //加入购物车  表单提交
+    public function add()
+    {
+        if (request()->isGet()) {
+            //如果是get请求 跳转到首页
+            $this->redirect('home/index/index');
+        }
+        //接收数据
+        $params = input();
+//        dump($params);die;
+        //参数检测
+        $validate = $this->validate($params, [
+            'goods_id'      => 'require|integer|gt:0',
+            'number'        => 'require|integer|gt:0',
+            'spec_goods_id' => 'integer|gt:0',
+        ]);
+        if ($validate !== true) {
+            $this->error($validate);
+        }
+        //处理数据 调用封装好的方法
+        \app\home\logic\CartLogic::addCart($params['goods_id'], $params['spec_goods_id'], $params['number']);
+        //结果页面展示
+        //查询商品相关信息以及SKU信息
+        $goods = \app\common\model\Goods::getGoodsWithSpec($params['spec_goods_id'], $params['goods_id']);
+        $goods = $goods->toArray();
+        $data  = [
+            'code' => 200,
+            'msg'  => '添加成功',
+            'info' => [
+                'goods'  => $goods,
+                'number' => $params['number']
+            ]
+        ];
+        return json($data);
+    }
+
+    public function cart()
+    {
+        $params = input();
+//        dump($params);die;
+        return view('addcart', ['goods' => $params]);
+    }
 }

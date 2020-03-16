@@ -7,6 +7,22 @@ use think\Request;
 
 class Test extends Controller
 {
+    //数据库操作
+    public function db()
+    {
+        $data = \app\common\model\Goods::with('category')->find(65)->toArray();
+//        $data = \app\common\model\Goods::with('category')->find(65);
+//        $data = (new Collection($data))->toArray();
+
+        $info = \app\common\model\Goods::with('category_row')->find(65)->toArray();
+//        $info = \app\common\model\Goods::with('brand_row')->find(66);
+//        $info = \app\common\model\Goods::with('category')->find(65);
+//        $info = (new Collection($info))->toArray();
+        dump($info);
+        dump($data);
+        die;
+    }
+
     /**
      * 显示资源列表
      *
@@ -26,44 +42,44 @@ class Test extends Controller
         //先取出整个数组
         $list = cookie('cart') ?: [];
         //判断  存在相同的购物记录（商品id和SKU的id 都一样） 累加数量；不存在 则添加新记录
-        $goods_id = 101;
+        $goods_id      = 101;
         $spec_goods_id = 211;
-        $number = 20;
-        $key = $goods_id . '_' . $spec_goods_id;
-        if(isset($list[$key])){
+        $number        = 20;
+        $key           = $goods_id . '_' . $spec_goods_id;
+        if (isset($list[$key])) {
             //存在相同记录 累加数量
             $list[$key]['number'] += $number;
-        }else{
+        } else {
             //否则，添加新记录
             $list[$key] = [
-                'goods_id' => $goods_id,
+                'goods_id'      => $goods_id,
                 'spec_goods_id' => $spec_goods_id,
-                'number'=>$number,
-                'is_selected' => 1
+                'number'        => $number,
+                'is_selected'   => 1
             ];
         }
         //将新的数组重新保存到cookie
         cookie('cart', $list, 86400);
 
         //3.修改数量、选中状态 修改一条数据
-        $goods_id = 101;
+        $goods_id      = 101;
         $spec_goods_id = 211;
-        $number = 20;
+        $number        = 20;
         //$is_selected = 1;
         //先取出所有数据
-        $list = cookie('cart')?:[];
+        $list = cookie('cart') ?: [];
         //拼接下标
-        $key = $goods_id . '_' . $spec_goods_id;
+        $key                  = $goods_id . '_' . $spec_goods_id;
         $list[$key]['number'] = $number;
         //$list[$key]['is_selected'] = $is_selected;
         //将新的数组 保存cookie
         cookie('cart', $list, 86400);
 
         //4.删除一条数据
-        $goods_id = 101;
+        $goods_id      = 101;
         $spec_goods_id = 211;
         //获取所有数据
-        $list = cookie('cart')?:[];
+        $list = cookie('cart') ?: [];
         //拼接下标
         $key = $goods_id . '_' . $spec_goods_id;
         //删除一个键值对
@@ -85,7 +101,7 @@ class Test extends Controller
     /**
      * 保存新建的资源
      *
-     * @param  \think\Request  $request
+     * @param \think\Request $request
      * @return \think\Response
      */
     public function save(Request $request)
@@ -96,7 +112,7 @@ class Test extends Controller
     /**
      * 显示指定的资源
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function read($id)
@@ -107,7 +123,7 @@ class Test extends Controller
     /**
      * 显示编辑资源表单页.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function edit($id)
@@ -118,8 +134,8 @@ class Test extends Controller
     /**
      * 保存更新的资源
      *
-     * @param  \think\Request  $request
-     * @param  int  $id
+     * @param \think\Request $request
+     * @param int $id
      * @return \think\Response
      */
     public function update(Request $request, $id)
@@ -130,7 +146,7 @@ class Test extends Controller
     /**
      * 删除指定资源
      *
-     * @param  int  $id
+     * @param int $id
      * @return \think\Response
      */
     public function delete($id)

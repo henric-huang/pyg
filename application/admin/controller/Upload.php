@@ -17,19 +17,24 @@ class Upload extends Base
     {
         $params = input();
         $type = $params['image_type'] ?? 'other';
-        //dump($type);die;  // "goods"
-//        $type = $params['image_type'] ?: 'other';
+//        $type = isset($params['image_type']) ?: 'other';
+//        dump($type);die;  // "goods"
+
         //获取文件信息（对象）
         $file = request()->file('logo');
+//        dump($file);die; //$file得到的是一个object对象
         if (empty($file)) {
             //必须上传商品logo图片
             $this->fail('请上传文件');
         }
         //将文件移动到指定的目录（public 目录下  uploads目录 goods目录）
-        $dir = ROOT_PATH . 'public' . DS . 'uploads' . DS . $type;
+//        $dir = ROOT_PATH . 'public' . DS . 'uploads' . DS . $type;
         //dump($dir);die();  // "F:\website\php70\thinkphp\Myself\pyg\public\uploads\goods"
+        $dir = '.'.DS . 'uploads' . DS . $type;
+
         if(!is_dir($dir)) mkdir($dir);
         $info = $file->validate(['size' => 10*1024*1024, 'ext' => ['jpg', 'png', 'gif', 'jpeg']])->move($dir);
+//        dump($info);die; // $info得到的是一个object对象
         if (empty($info)) {
             //上传出错
             $msg = $file->getError();

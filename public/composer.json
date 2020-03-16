@@ -1,2 +1,6 @@
 {
+    "require": {
+        "elasticsearch/elasticsearch": "^7.6",
+        "phpmailer/phpmailer": "^6.1"
+    }
 }

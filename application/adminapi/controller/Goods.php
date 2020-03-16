@@ -43,6 +43,7 @@ class Goods extends BaseApi
     public function create()
     {
         //
+        echo 'create';
     }
 
     /**
@@ -193,7 +194,19 @@ class Goods extends BaseApi
     public function edit($id)
     {
         //查询商品基本信息（关联模型查询）
-        //嵌套关联太多，只能写一个 category_row.brands  type_row.specs type_row.attrs type_row.specs.spec_values
+        //嵌套关联太多，相同的大模型的关联只能写一个，不同的大模型的关联可以写多个。
+        //也就是说，category_row.brands和type_row.specs、type_row.specs.spec_values可以同时使用查询出数据，因为他们分别是不同的大模型（category_row和type_row）的关联
+        //而type_row.attrs和type_row.specs，type_row.specs.spec_values不能同时使用，非要同时使用只能查出后一个关联的数据出来，因为它们同是type_row下面的关联
+
+        /*$goods                      = \app\common\model\Goods::with('category_row,category_row.brand,brand_row,goods_images,spec_goods,type_row,type_row.specs,type_row.specs.spec_values')->find($id);
+        $goods['type_row']['attrs'] = \app\common\model\Type::with('attrs')->find($goods['type_id']);
+        $goods['category']          = $goods['category_row'];
+        $goods['brand']             = $goods['brand_row'];
+        $goods['type']              = $goods['type_row'];
+        unset($goods['category_row']);
+        unset($goods['brand_row']);
+        unset($goods['type_row']);*/
+
         $goods             = \app\common\model\Goods::with('category_row,category_row.brand,brand_row,goods_images,spec_goods')->find($id);
         $goods['category'] = $goods['category_row'];
         $goods['brand']    = $goods['brand_row'];
@@ -201,15 +214,17 @@ class Goods extends BaseApi
         unset($goods['brand_row']);
         //单独查询所属模型及规格属性等信息
         $goods['type'] = \app\common\model\Type::with('specs,specs.spec_values,attrs')->find($goods['type_id']);
+
+        /*$goods = $goods->toArray();
+        dump($goods);die;*/
+
         //查询分类信息（所有一级、所属一级的二级、所属二级的三级）
         $cate_one = \app\common\model\Category::where('pid', 0)->select();
         //从商品所属的三级分类的pid_path中，取出所属的二级id和一级id
-        $pid_path = explode('_', $goods['category']['pid_path']);
-        //$pid_path[1] 一级id;  $pid_path[2] 二级id
         //查询所属一级的所有二级
-        $cate_two = \app\common\model\Category::where('pid', $pid_path[1])->select();
+        $cate_two = \app\common\model\Category::where('pid', $goods['category']['pid_path'][1])->select();
         //查询所属二级的所有三级
-        $cate_three = \app\common\model\Category::where('pid', $pid_path[2])->select();
+        $cate_three = \app\common\model\Category::where('pid', $goods['category']['pid_path'][2])->select();
         //查询所有的类型信息
         $type = \app\common\model\Type::select();
         //返回数据
@@ -237,6 +252,41 @@ class Goods extends BaseApi
      */
     public function update(Request $request, $id)
     {
+        /*$params = [
+            'goods_name' => 'iphone X',
+            'goods_price' => '8900',
+            'goods_introduce' => 'iphone iphonex',
+            'goods_logo' => '/uploads/goods/20190101/afdngrijskfsfa.jpg',
+            'goods_images' => [
+                '/uploads/goods/20190101/dfsssadsadsada.jpg',
+                '/uploads/goods/20190101/adsafasdadsads.jpg',
+                '/uploads/goods/20190101/dsafadsadsaasd.jpg',
+            ],
+            'cate_id' => '72',
+            'brand_id' => '3',
+            'type_id' => '16',
+            'item' => [
+                '18_21' => [
+                    'value_ids'=>'18_21',
+                    'value_names'=>'颜色：黑色；内存：64G',
+                    'price'=>'8900.00',
+                    'cost_price'=>'5000.00',
+                    'store_count'=>100
+                ],
+                '18_22' => [
+                    'value_ids'=>'18_22',
+                    'value_names'=>'颜色：黑色；内存：128G',
+                    'price'=>'9000.00',
+                    'cost_price'=>'5000.00',
+                    'store_count'=>50
+                ]
+            ],
+            'attr' => [
+                '7' => ['id'=>'7', 'attr_name'=>'毛重', 'attr_value'=>'150g'],
+                '8' => ['id'=>'8', 'attr_name'=>'产地', 'attr_value'=>'国产'],
+            ]
+        ];*/
+
         //接收参数
         $params = input();
         //对富文本编辑器字段  goods_desc 过滤方式防范xss攻击
