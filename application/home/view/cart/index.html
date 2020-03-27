@@ -359,7 +359,8 @@
         //页面刷新，直接判断 全选按钮是否应该也变成选中
         function check_all() {
             //判断 选中的行数和总行数 是否相等
-            var status = $('.row_check:checked').length == $('.row_check').length;
+            var status = $('.row_check:checked').length == $('.row_check').length;  // 'true'或'false'
+            // console.log(status);
             //设置全选按钮的选中状态 checked属性
             $('.check_all').prop('checked', status);
         }

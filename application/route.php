@@ -52,6 +52,20 @@ Route::domain('adminapi', function () {
 //测试资源路由
 Route::resource('blog', 'adminapi/blog', [], ['id' => '\d+']);
 
+// 使用[GET、POST、PUT、DELETE]，三级目录要写全："模块名/控制器名/方法名"
+// http://www.pyg.com/admin
+//Route::get('admin', 'admin/Admin/index', [], ['id' => '\d+']);
+
+//路由分组
+/*Route::group('admin', function () {
+    // http://www.pyg.com/admin/admin 就固定访问到'admin/Admin/index'控制器
+    Route::get('admin', 'admin/Admin/index', [], ['id' => '\d+']);
+});*/
+
+
+// 如果使用资源路由，html中默认是get提交，一是要注意请求类型要匹配（GET、POST、PUT、DELETE），
+//二是要注意路由名称，要严格按照生成路由规则书写
+//Route::resource('admin', 'admin/Admin', [], ['id' => '\d+']);
 
 
 

@@ -12,7 +12,8 @@ class Goods extends Model
     //设置软删除
     use \traits\model\SoftDelete;
     protected $deleteTime = 'delete_time';
-    protected $hidden = ['create_time', 'update_time', 'delete_time'];
+
+//    protected $hidden = ['create_time', 'update_time', 'delete_time'];
 
     protected static function init()
     {
@@ -91,4 +92,21 @@ class Goods extends Model
         }
         return $goods;
     }
+
+    /*public function getCreateTimeAttr($value)
+    {
+        return date('Y-m-d H:i:s', $value);
+    }*/
+
+    public function getIsOnSaleAttr($value)
+    {
+//        return $value == 1 ? '是' : '否';
+        $status = [0 => '下架', 1 => '上架'];
+        return $status[$value];
+    }
+
+    /*public function setCreateTimeAttr($value)
+    {
+        return date('Y-m-d H:i:s', $value);
+    }*/
 }

@@ -3,9 +3,13 @@
 namespace app\common\model;
 
 use think\Model;
+use traits\model\SoftDelete;
 
 class Cart extends Model
 {
+    use SoftDelete;
+    protected $deleteTime = 'delete_time';
+
     //设置购物车-商品关联  一条购物车记录 属于 一个商品
     public function goods()
     {

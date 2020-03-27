@@ -128,8 +128,7 @@ class Cart extends Base
         \app\home\logic\CartLogic::changeStatus($params['id'], $params['status']);
         //返回数据
         $res = ['code' => 200, 'msg' => 'success'];
-        echo json_encode($res);
-        die;
+        echo json_encode($res);die;
     }
 
     //加入购物车  表单提交

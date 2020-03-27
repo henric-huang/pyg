@@ -24,6 +24,8 @@ class Goods extends Base
             $config['query']     = ['keyword' => $keyword];
         }
         $list = \app\admin\model\Goods::with('category,type,brand')->where($where)->order('id desc')->paginate(2, false, $config);
+//        $list = \app\admin\model\Goods::with('category,type,brand')->where($where)->order('id desc')->select();
+
         foreach ($list as &$v) {
             $v['cate_name']  = $v['category']['cate_name'];
             $v['type_name']  = $v['type']['type_name'];
@@ -32,6 +34,7 @@ class Goods extends Base
             unset($v['type']);
             unset($v['brand']);
         }
+//        dump($list);die;
 
         //模板赋值和模板渲染
         return view('product-list', ['list' => $list]);

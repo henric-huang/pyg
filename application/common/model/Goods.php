@@ -80,7 +80,9 @@ class Goods extends Model
         return $this->hasMany('SpecGoods', 'goods_id', 'id');
     }
 
-    //获取商品以及sku信息
+    /*
+     * 获取商品以及sku信息
+     */
     public static function getGoodsWithSpec($spec_goods_id, $goods_id)
 //    public function getGoodsWithSpec($spec_goods_id, $goods_id)
     {

@@ -3,6 +3,7 @@
 namespace app\home\controller;
 
 use think\Controller;
+use think\Exception;
 use think\Request;
 
 class Order extends Base
@@ -53,6 +54,7 @@ class Order extends Base
         }
         unset($v);*/
         $res = \app\home\logic\OrderLogic::getCartDataWithGoods();
+//        dump($res);die;
 //        $res['address'] = $address;
 //        return view('create', $res);
         $cart_data    = $res['cart_data'];
@@ -137,6 +139,9 @@ class Order extends Base
             //从购物车表删除对应数据
             //\app\common\model\Cart::where(['user_id' => $user_id, 'is_selected'=>1])->delete();
             //\app\common\model\Cart::where('user_id',$user_id)->where('is_selected',1)->delete();
+            // 软删除使用模型一定要用 模型::destroy()方法
+            \app\common\model\Cart::destroy(['user_id' => $user_id, 'is_selected' => 1]);
+
             //库存预扣减（冻结库存）
             $spec_goods = [];
             $goods      = [];
@@ -246,7 +251,7 @@ class Order extends Base
     <input id='WIDtotal_amount' name='WIDtotal_amount' value='{$order['order_amount']}'/>
     <input id='WIDbody' name='WIDbody' value='品优购订单，测试订单，你付款了我也不发货' />
     </form><script>document.getElementById('alipayment').submit();</script>
-EOF;*/
+    EOF;*/
                 break;
         }
     }
@@ -259,6 +264,7 @@ EOF;*/
         //参考/plugins/alipay/return_url.php
         //接收参数
         $params = input();
+//        dump($params);die;
         //参数检测（签名验证）  接收到的参数 和 支付宝传递的参数 是否发生改变
         require_once("./plugins/alipay/config.php");
         require_once './plugins/alipay/pagepay/service/AlipayTradeService.php';

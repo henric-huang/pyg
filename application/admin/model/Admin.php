@@ -10,8 +10,10 @@ class Admin extends Model
     protected $insert = ['password'=>'123456'];
 
     protected $hidden = ['create_time', 'update_time', 'delete_time'];
+
     public function role(){
         return $this->belongsTo('Role')->bind('role_name');
+//        return $this->belongsTo('Role');
     }
 
     public function getLastLoginTimeAttr($value){

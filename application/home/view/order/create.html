@@ -23,7 +23,8 @@
                         <li class="addr-item">
                             <div address_id="{$v.id}" class="con name {if($v.is_default)}selected{/if}">
                                 <a href="javascript:;">
-                                    <em>{$v.consignee}</em><span title="点击取消选择">&nbsp;</span></a>
+                                    <em>{$v.consignee}</em><span title="点击取消选择">&nbsp;</span>
+                                </a>
                             </div>
                             <div class="con address">
                                 <span class="consignee_name">{$v.consignee}</span>
@@ -228,7 +229,7 @@
                 //获取到点击的地址
                 var li = $(element).closest('li');
             } else {
-                //获取到默认地址
+                //如果页面没有点击选择 获取作为默认地址
                 var li = $('.addressInfo').find('.name.selected').closest('li');
             }
             var consignee_address = li.find('.consignee_address').html();
@@ -237,6 +238,7 @@
             //展示到页面右下角
             $('.fc-receiverInfo').html('寄送至：' + consignee_address + ' 收货人：' + consignee_name + ' ' + consignee_phone);
         };
+        // 设置默认地址
         show_address();
 
         //点击地址 切换右下角的地址

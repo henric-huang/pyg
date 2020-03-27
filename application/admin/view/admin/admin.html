@@ -24,13 +24,15 @@
 	<div class="Hui-article">
 		<article class="cl pd-20">
 			<div class="text-c">
-				<form class="Huiform" method="get" action="{:url('index')}" target="_self">
+				<form class="Huiform" method="get" action="{:url('admin/admin/index')}" target="_self">
+<!--				<form class="Huiform" method="get" action="{:url('index')}" target="_self">-->
 					<input type="text" class="input-text" style="width:250px" placeholder="输入管理员名称" id="" name="keyword" value="{$Request.param.keyword}">
 					<button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
 				</form>
 			</div>
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l"><a href="javascript:;" id="add" data-url="{:url('create')}" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加管理员</a> </span>
+<!--				<span class="l"><a href="javascript:;" id="add" data-url="{:url('/admin/create')}" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加管理员</a> </span>-->
 				<span class="r">共有数据：<strong>{$list->total()}</strong> 条</span>
 			</div>
 			<table class="table table-border table-bordered table-bg table-sort">
@@ -69,7 +71,9 @@
 						</td>
 						<td class="td-manage">
 							<a title="编辑" data-url="{:url('edit', ['id'=>$v.id])}" href="javascript:;" class="ml-5 edit" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+<!--							<a title="编辑" data-url="{:url('/admin/'.$v.id.'/edit')}" href="javascript:;" class="ml-5 edit" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>-->
 							<a title="删除" data-url="{:url('delete',['id'=>$v.id])}" href="javascript:;" class="ml-5 delete" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+<!--							<a title="删除" data-url="{:url('/admin/'.$v.id)}" href="javascript:;" class="ml-5 delete" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>-->
 						</td>
 					</tr>
 					{/foreach}

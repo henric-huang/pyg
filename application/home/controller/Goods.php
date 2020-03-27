@@ -189,7 +189,7 @@ class Goods extends Base
         $value_ids_map = [];
         foreach ($goods['spec_goods'] as $v) {
             //$v['id']  $v['price']
-            $row                            = [
+            $row = [
                 'id'    => $v['id'],
                 'price' => $v['price']
             ];

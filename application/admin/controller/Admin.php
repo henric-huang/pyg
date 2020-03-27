@@ -16,13 +16,29 @@ class Admin extends Base
      */
     public function index()
     {
-        $where = [];
+        $where   = [];
         $keyword = input('keyword');
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
             $where['username'] = ['like', "%$keyword%"];
         }
-        $list = \app\admin\model\Admin::with('role')->where($where)->paginate(10);
+        $list = \app\admin\model\Admin::with('role')->where($where)->paginate(5);
         $this->assign('list', $list);
+
+        /*$data = \app\admin\model\Admin::with('role,role.role_auth')->find(1)->toArray();
+        $num = [];
+        foreach ($data['role']['role_auth'] as $v) {
+            $num [] = $v['id'];
+        }
+        dump($num);
+        if (in_array('1', $num)) {
+            dump($data);die;
+        };*/
+
+        /*$data = \app\admin\model\Auth::with('role_auth')->find('1')->toArray();
+        dump($data);die;*/
+
+        /*$data = \app\admin\model\Role::with('role_auth')->find('1')->toArray();
+        dump($data);die;*/
         return view('admin');
     }
 
@@ -96,6 +112,7 @@ class Admin extends Base
      */
     public function update(Request $request, $id)
     {
+        return 'update'.$id;die;
         $data     = input();
         $validate = $this->validate($data, [
             'email|邮箱'   => 'require|email',
